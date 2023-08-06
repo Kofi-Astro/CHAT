@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../data/providers/chats_provider.dart';
 
+import '../../widgets/recepient_message.dart';
+import '../../widgets/sender_message.dart';
 import './contact_controller.dart';
 import '../../models/chat.dart';
 import '../../models/message.dart';
@@ -20,6 +22,11 @@ class ContactScreen extends StatefulWidget {
 
 class _ContactScreenState extends State<ContactScreen> {
   late ContactController _contactController;
+
+  final ScrollController _scrollController = ScrollController();
+  bool showEmoji = false;
+
+  bool sendButton = false;
 
   @override
   void initState() {
@@ -49,28 +56,101 @@ class _ContactScreenState extends State<ContactScreen> {
         builder: (context, snapshot) {
           return Scaffold(
             backgroundColor: const Color(0xffeeeeeeee),
-            // appBar: AppBar(
-            //     title: Column(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   children: [
-            //     Text(
-            //       _contactController.chat.otherUser!.username!,
-            //       style: const TextStyle(
-            //         color: Colors.white,
-            //       ),
-            //     ),
-            //     renderOnline(),
-            //   ],
-            // )),
-            appBar: CupertinoNavigationBar(
-              middle: Text(
-                _contactController.chat.otherUser!.username!,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(60),
+              child: AppBar(
+                leadingWidth: 70,
+                titleSpacing: 0,
+                leading:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Icon(
+                      Icons.arrow_back,
+                      size: 24,
+                    ),
+                  ),
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.blueGrey,
+                    child: Image.asset(
+                      'assets/images/nsb_logo.png',
+                      width: 37,
+                    ),
+                  )
+                ]),
+                title: InkWell(
+                  onTap: () {},
+                  child: Container(
+                    margin: const EdgeInsets.all(5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _contactController.chat.otherUser!.username!,
+                          style: const TextStyle(
+                            fontSize: 18.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Text(
+                          'last seen today at 00:00',
+                          style: TextStyle(
+                            fontSize: 13,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
+                actions: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.videocam,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.call,
+                    ),
+                  ),
+                  PopupMenuButton(
+                      onSelected: (value) {},
+                      itemBuilder: (BuildContext context) {
+                        return [
+                          const PopupMenuItem(
+                            value: 'View Contact',
+                            child: Text('View Contact'),
+                          ),
+                          const PopupMenuItem(
+                            value: 'Media, links and docs',
+                            child: Text('Media, links and docs'),
+                          ),
+                          const PopupMenuItem(
+                            value: 'NSB Chat web',
+                            child: Text('NSB Chat web'),
+                          ),
+                          const PopupMenuItem(
+                            value: 'Search',
+                            child: Text('Search'),
+                          ),
+                          const PopupMenuItem(
+                            value: 'Mute Notification',
+                            child: Text('Mute Notification'),
+                          ),
+                          const PopupMenuItem(
+                            value: 'Wallpaper',
+                            child: Text('Wallpaper'),
+                          )
+                        ];
+                      })
+                ],
               ),
-              backgroundColor: const Color(0Xfff8f8f8),
             ),
             body: SafeArea(
                 child: Container(
@@ -80,18 +160,23 @@ class _ContactScreenState extends State<ContactScreen> {
                     // reverse: true,
                     itemCount: _contactController.chat.messages!.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final reverseIndex =
-                          _contactController.chat.messages!.length - 1 - index;
+                      final message = _contactController.chat.messages![index];
                       return Padding(
-                        padding: const EdgeInsets.only(
+                        padding: EdgeInsets.only(
                           left: 15,
                           right: 15,
                           top: 5,
                         ),
-                        child: renderMessages(
-                            context,
-                            // _contactController.chat.messages![reverseIndex]
-                            _contactController.chat.messages![index]),
+                        child:
+                            message.userId == _contactController.chat.myUser!.id
+                                ? SenderMessageCard(
+                                    message: message.text,
+                                    time: message.createdAt.toString(),
+                                  )
+                                : RecepientMessageCard(
+                                    message: message.text,
+                                    time: message.createdAt.toString(),
+                                  ),
                       );
                     },
                   ),
@@ -202,6 +287,123 @@ class _ContactScreenState extends State<ContactScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  iconCreation({
+    IconData? icon,
+    Color? color,
+    String? text,
+    required Function(BuildContext) onPressed,
+  }) {
+    return Column(
+      children: [
+        CircleAvatar(
+          backgroundColor: color,
+          radius: 30,
+          child: IconButton(
+            icon: Icon(
+              icon,
+              size: 29,
+              color: Colors.white,
+            ),
+            onPressed: () => onPressed(context),
+          ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Text(
+          text!,
+          style: const TextStyle(
+            fontSize: 15,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> clickCamera(BuildContext context) async {}
+  Future<void> clickGallery(BuildContext context) async {}
+  Future<void> clickLocation(BuildContext context) async {}
+  Future<void> clickAudio(BuildContext context) async {}
+  Future<void> clickContact(BuildContext context) async {}
+
+  Future<void> clickDocument(BuildContext context) async {}
+
+  bottomSheet() {
+    return SizedBox(
+      height: 278,
+      child: Column(
+        children: [
+          Expanded(
+            child: Card(
+              margin: const EdgeInsets.all(8),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      iconCreation(
+                        icon: Icons.insert_drive_file,
+                        color: Colors.indigo,
+                        text: 'Document',
+                        onPressed: (context) => clickDocument(context),
+                      ),
+                      iconCreation(
+                        icon: Icons.camera_alt_sharp,
+                        color: Colors.pinkAccent,
+                        text: 'Image',
+                        onPressed: (context) => clickCamera(context),
+                      ),
+                      iconCreation(
+                        icon: Icons.insert_drive_file,
+                        color: Colors.purple,
+                        text: 'Gallery',
+                        onPressed: (context) => clickGallery(context),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      iconCreation(
+                        icon: Icons.headset,
+                        color: Colors.amber,
+                        text: 'Audio',
+                        onPressed: (context) => clickAudio(context),
+                      ),
+                      iconCreation(
+                        icon: Icons.location_on,
+                        color: Colors.green,
+                        text: 'Location',
+                        onPressed: (context) => clickLocation(context),
+                      ),
+                      iconCreation(
+                        icon: Icons.person,
+                        color: Colors.blue,
+                        text: 'Contact',
+                        onPressed: (context) => clickContact(context),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+              margin: const EdgeInsets.all(10),
+              color: Colors.white,
+              width: double.infinity,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('CANCEL'),
+              ))
+        ],
+      ),
     );
   }
 }
