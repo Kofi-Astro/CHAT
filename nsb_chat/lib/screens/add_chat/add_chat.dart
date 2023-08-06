@@ -32,16 +32,6 @@ class _AddChatScreenState extends State<AddChatScreen> {
         builder: (context, snapshot) {
           return Scaffold(
             body: CustomScrollView(slivers: [
-              CupertinoSliverNavigationBar(
-                largeTitle: const Text(
-                  'Users',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                backgroundColor: Theme.of(context).primaryColor,
-              ),
               renderusers(),
             ]),
           );
@@ -97,28 +87,5 @@ class _AddChatScreenState extends State<AddChatScreen> {
         ),
       ),
     );
-
-    // return ListView(
-    //   padding: const EdgeInsets.symmetric(
-    //     vertical: 10,
-    //     horizontal: 10,
-    //   ),
-    //   children: _addChatController.users.map((user) {
-    //     return Column(
-    //       children: [
-    //         UserCard(
-    //           user: user,
-    //           onTap: _addChatController.newChat,
-    //           // onTap: () {
-    //           //   Navigator.of(context).pushNamed(ContactScreen.routeName);
-    //           // },
-    //         ),
-    //         const SizedBox(
-    //           height: 5,
-    //         ),
-    //       ],
-    //     );
-    //   }).toList(),
-    // );
   }
 }

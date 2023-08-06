@@ -76,7 +76,6 @@ class ContactController extends StateControl {
     // print(message.userId);
     // chat.messages!.add(message);
     // notifyListeners();
-    print(message);
     _chatsProvider.addMessageToSelectedChat(message);
   }
 

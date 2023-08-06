@@ -205,20 +205,3 @@ class _ContactScreenState extends State<ContactScreen> {
     );
   }
 }
-
-  // Widget renderOnline() {
-  //   // if (_contactController!.chatOnlineInMyChat) {
-  //   //   return const Text(
-  //   //     'online in your conversation',
-  //   //     style: TextStyle(
-  //   //         fontSize: 12,
-  //   //         fontWeight: FontWeight.bold,
-  //   //         color: Colors.greenAccent),
-  //   //   );
-  //   // }
-  //   return const SizedBox(
-  //     width: 0,
-  //     height: 0,
-  //   );
-  // }
-
