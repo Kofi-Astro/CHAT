@@ -198,45 +198,92 @@ class _ContactScreenState extends State<ContactScreen> {
                                 horizontal: 25,
                               ),
                               child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: TextField(
-                                  autocorrect: false,
-                                  cursorColor: Theme.of(context).primaryColor,
-                                  controller:
-                                      _contactController.textEditingController,
-                                  onSubmitted: (_) {
-                                    _contactController.sendMessage();
-                                  },
-                                  decoration: const InputDecoration(
-                                    contentPadding: EdgeInsets.only(bottom: 0),
-                                    hintText: 'Type a message',
-                                    hintStyle: TextStyle(fontSize: 16),
-                                    border: InputBorder.none,
-                                  ),
-                                ),
-                              ),
+                                  alignment: Alignment.centerLeft,
+                                  child:
+                                      // TextField(
+                                      //   autocorrect: false,
+                                      //   cursorColor: Theme.of(context).primaryColor,
+                                      //   controller:
+                                      //       _contactController.textEditingController,
+                                      //   onSubmitted: (_) {
+                                      //     _contactController.sendMessage();
+                                      //   },
+                                      //   decoration: const InputDecoration(
+                                      //     contentPadding: EdgeInsets.only(bottom: 0),
+                                      //     hintText: 'Type a message',
+                                      //     hintStyle: TextStyle(fontSize: 16),
+                                      //     border: InputBorder.none,
+                                      //   ),
+                                      // ),
+                                      TextFormField(
+                                    controller: _contactController
+                                        .textEditingController,
+                                    onChanged: (value) {
+                                      if (value.isNotEmpty) {
+                                        setState(() {
+                                          sendButton = true;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          sendButton = false;
+                                        });
+                                      }
+                                    },
+                                    textAlignVertical: TextAlignVertical.center,
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: 5,
+                                    minLines: 1,
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'Type a message',
+                                        contentPadding:
+                                            const EdgeInsets.all(10),
+                                        prefixIcon: const IconButton(
+                                            icon: Icon(Icons.emoji_emotions),
+                                            onPressed: null),
+                                        suffixIcon: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                                onPressed: () {
+                                                  showModalBottomSheet(
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      context: context,
+                                                      builder: (builder) =>
+                                                          bottomSheet());
+                                                },
+                                                icon: const Icon(
+                                                  Icons.attach_file,
+                                                )),
+                                            const Icon(Icons.camera_alt),
+                                          ],
+                                        )),
+                                  )),
                             ),
                           ),
                         ),
                         const SizedBox(
                           width: 5,
                         ),
-                        Material(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(50),
-                          child: InkWell(
-                            onTap: _contactController.sendMessage,
-                            borderRadius: BorderRadius.circular(50),
-                            child: Container(
-                              width: 50,
-                              height: 50,
-                              alignment: Alignment.center,
-                              child: const Icon(
-                                Icons.send,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                            ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(bottom: 8.0, left: 2, right: 2),
+                          child: CircleAvatar(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            radius: 25,
+                            child: sendButton
+                                ? IconButton(
+                                    onPressed: _contactController.sendMessage,
+                                    icon: const Icon(
+                                      Icons.send,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : const Icon(
+                                    Icons.mic,
+                                    color: Colors.white,
+                                  ),
                           ),
                         )
                       ]),
@@ -247,47 +294,6 @@ class _ContactScreenState extends State<ContactScreen> {
             )),
           );
         });
-  }
-
-  Widget renderMessages(BuildContext context, Message message) {
-    return Column(
-      children: [
-        Material(
-          color: Colors.transparent,
-          child: Align(
-            alignment: message.userId == _contactController.chat.myUser!.id
-                ? Alignment.centerRight
-                : Alignment.centerLeft,
-            child: Container(
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.75),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Card(
-                margin: const EdgeInsets.symmetric(
-                  vertical: 2,
-                ),
-                color: message.userId == _contactController.chat.myUser!.id
-                    ? const Color(0xFFC0CBFF)
-                    : Colors.white,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  child: Text(
-                    message.text!,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 14.5,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
   }
 
   iconCreation({
