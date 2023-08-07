@@ -5,6 +5,7 @@ import '../../data/providers/chats_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 
+import '../../widgets/camera_preview.dart';
 import '../../widgets/recepient_message.dart';
 import '../../widgets/sender_message.dart';
 import './contact_controller.dart';
@@ -31,7 +32,7 @@ class _ContactScreenState extends State<ContactScreen> {
   bool sendButton = false;
 
   FilePicker? filePicker;
-  ImagePicker? imagePicker;
+  ImagePicker imagePicker = ImagePicker();
 
   @override
   void initState() {
@@ -322,7 +323,14 @@ class _ContactScreenState extends State<ContactScreen> {
 // http://localhost:5000/chats/uploadFile
   Future<void> clickCamera(BuildContext context) async {}
   Future<void> clickGallery(BuildContext context) async {
-    XFile? file = await imagePicker!.pickImage(source: ImageSource.gallery);
+    XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
+
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => CameraPreviewScreen(
+        path: file!.path,
+        // onImageSend: onImageSend,
+      ),
+    ));
   }
 
   Future<void> clickLocation(BuildContext context) async {}
