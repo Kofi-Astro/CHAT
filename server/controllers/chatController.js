@@ -2,6 +2,9 @@ const ChatRepository = require('../repositories/chatRepository');
 const ObjectId = require('mongoose').Types.ObjectId;
 const shared = require('../shared/index');
 
+
+
+
 function formatChatMessageTime(chat) {
     chat.messages = chat.messages.map(message => {
         message.createdAt = new Date(message.createAt).getTime();
@@ -160,8 +163,30 @@ class ChatController {
             });
         }
     }
+
+
+
 }
 
 const chatController = new ChatController();
 
 module.exports = chatController;
+
+
+
+
+
+
+
+
+
+
+
+//  async sendFiles(req, res) {
+//     try {
+//         res.json({ path: req.file.filename, })
+
+//     } catch (error) {
+//         return res.json({ error: error });
+//     }
+// }

@@ -41,6 +41,8 @@ dependencies:
   shared_preferences: ^2.2.0
   http: ^1.1.0
   progress_dialog_null_safe: ^1.0.7
+  file_picker: ^5.3.3
+  image_picker: ^1.0.2
 
 dev_dependencies:
   flutter_test:

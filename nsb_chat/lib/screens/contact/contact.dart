@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../data/providers/chats_provider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 
 import '../../widgets/recepient_message.dart';
 import '../../widgets/sender_message.dart';
@@ -27,6 +29,9 @@ class _ContactScreenState extends State<ContactScreen> {
   bool showEmoji = false;
 
   bool sendButton = false;
+
+  FilePicker? filePicker;
+  ImagePicker? imagePicker;
 
   @override
   void initState() {
@@ -161,6 +166,7 @@ class _ContactScreenState extends State<ContactScreen> {
                     itemCount: _contactController.chat.messages!.length,
                     itemBuilder: (BuildContext context, int index) {
                       final message = _contactController.chat.messages![index];
+
                       return Padding(
                         padding: EdgeInsets.only(
                           left: 15,
@@ -199,23 +205,7 @@ class _ContactScreenState extends State<ContactScreen> {
                               ),
                               child: Align(
                                   alignment: Alignment.centerLeft,
-                                  child:
-                                      // TextField(
-                                      //   autocorrect: false,
-                                      //   cursorColor: Theme.of(context).primaryColor,
-                                      //   controller:
-                                      //       _contactController.textEditingController,
-                                      //   onSubmitted: (_) {
-                                      //     _contactController.sendMessage();
-                                      //   },
-                                      //   decoration: const InputDecoration(
-                                      //     contentPadding: EdgeInsets.only(bottom: 0),
-                                      //     hintText: 'Type a message',
-                                      //     hintStyle: TextStyle(fontSize: 16),
-                                      //     border: InputBorder.none,
-                                      //   ),
-                                      // ),
-                                      TextFormField(
+                                  child: TextFormField(
                                     controller: _contactController
                                         .textEditingController,
                                     onChanged: (value) {
@@ -329,13 +319,19 @@ class _ContactScreenState extends State<ContactScreen> {
     );
   }
 
+// http://localhost:5000/chats/uploadFile
   Future<void> clickCamera(BuildContext context) async {}
-  Future<void> clickGallery(BuildContext context) async {}
+  Future<void> clickGallery(BuildContext context) async {
+    XFile? file = await imagePicker!.pickImage(source: ImageSource.gallery);
+  }
+
   Future<void> clickLocation(BuildContext context) async {}
   Future<void> clickAudio(BuildContext context) async {}
   Future<void> clickContact(BuildContext context) async {}
 
-  Future<void> clickDocument(BuildContext context) async {}
+  Future<void> clickDocument(BuildContext context) async {
+    // XFile? file = await filePicker!.getDirectoryPath()
+  }
 
   bottomSheet() {
     return SizedBox(
