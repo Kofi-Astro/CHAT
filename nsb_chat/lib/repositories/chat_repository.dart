@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:http/http.dart' as https;
+
 import '../models/chat.dart';
 import '../models/custom_error.dart';
 import '../utils/custom_http_client.dart';
@@ -37,6 +39,28 @@ class ChatRepository {
       return chat;
     } catch (error) {
       return CustomError.fromJson({'error': true, 'errorMessage': 'Error'});
+    }
+  }
+
+  Future<dynamic> sendAttachments(String path, String message) async {
+    try {
+      var request = https.MultipartRequest(
+          'POST', Uri.parse('${MyUrls.serverUrl}/chats/uploadFile'));
+
+      request.files.add(await https.MultipartFile.fromPath('file', path));
+      request.headers.addAll({
+        'Content-type': 'multipart/form-data',
+      });
+
+      https.StreamedResponse response = await request.send();
+      print(response.statusCode);
+
+      var httpResponse = await https.Response.fromStream(response);
+      var data = json.decode(httpResponse.body);
+      print(data['path']);
+    } catch (error) {
+      return CustomError.fromJson(
+          {'error': true, 'errorMessage': 'Error Sending files'});
     }
   }
 

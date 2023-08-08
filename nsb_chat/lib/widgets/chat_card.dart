@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nsb_chat/widgets/recepient_file_card.dart';
+import 'package:nsb_chat/widgets/sender_file_card.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -21,109 +23,63 @@ class ChatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     initializeDateFormatting('pt_BR', null);
+
     return InkWell(
       onTap: () {
-        // Navigator.of(context).pushNamed(
-        //   ContactScreen.routeName,
-        // );
-
         ChatsProvider chatsProvider =
             Provider.of<ChatsProvider>(context, listen: false);
         chatsProvider.setSelectedChat(chat.id!);
         Navigator.of(context).pushNamed(ContactScreen.routeName);
       },
-      child: Container(
-        padding: const EdgeInsets.only(
-          left: 15,
-          top: 10,
-          bottom: 0,
-        ),
-        child: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/nsb_logo.png'),
-                  radius: 20,
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 15,
-                      bottom: 5,
-                    ),
-                    child: Container(
-                        child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          chat.otherUser!.username!,
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 2,
-                        ),
-                        Text(
-                          // chat.messages![0].text!,
-                          chat.messages![chat.messages!.length - 1].text!,
-                          style: const TextStyle(fontSize: 12),
-                          maxLines: 2,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 15, left: 30),
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                messageDate(chat
-                                    .messages![chat.messages!.length - 1]
-                                    .createdAt!),
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 5, vertical: 2),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: Colors.blue,
-                                ),
-                                child: const Text(
-                                  '2',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: const Color(0xffdddddd),
-                        )
-                      ],
-                    )),
-                  ),
-                )
-              ],
+      child: Column(children: [
+        // SenderFileCard(),
+        // RecepientFileCard(),
+        ListTile(
+          leading: const CircleAvatar(
+            backgroundImage: AssetImage('assets/images/nsb_logo.png'),
+            radius: 20,
+          ),
+          title: Text(
+            chat.otherUser!.username!,
+            style: const TextStyle(
+                color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          subtitle: Row(children: [
+            Icon(Icons.done_all),
+            SizedBox(
+              width: 3,
             ),
-          ],
-        ),
-      ),
+            Text(
+              // chat.messages![0].text!,
+              chat.messages![chat.messages!.length - 1].text!,
+              style: const TextStyle(fontSize: 13),
+              maxLines: 2,
+            ),
+          ]),
+          trailing: Column(
+            children: [
+              Text('00:00'),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.blue,
+                ),
+                child: const Text(
+                  '2',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
+      ]),
     );
   }
 
@@ -159,3 +115,114 @@ class ChatCard extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+    // return InkWell(
+    //   onTap: () {
+    //     // Navigator.of(context).pushNamed(
+    //     //   ContactScreen.routeName,
+    //     // );
+
+    // ChatsProvider chatsProvider =
+    //     Provider.of<ChatsProvider>(context, listen: false);
+    // chatsProvider.setSelectedChat(chat.id!);
+    // Navigator.of(context).pushNamed(ContactScreen.routeName);
+    //   },
+
+    //   child: Container(
+    //     padding: const EdgeInsets.only(
+    //       left: 15,
+    //       top: 10,
+    //       bottom: 0,
+    //     ),
+    //     child: Column(
+    //       children: [
+    //         Row(
+    //           crossAxisAlignment: CrossAxisAlignment.start,
+    //           children: [
+    // const CircleAvatar(
+    //   backgroundImage: AssetImage('assets/images/nsb_logo.png'),
+    //   radius: 20,
+    // ),
+    //             Expanded(
+    //               child: Padding(
+    //                 padding: const EdgeInsets.only(
+    //                   left: 15,
+    //                   bottom: 3,
+    //                 ),
+    //                 child: Container(
+    //                     child: Column(
+    //                   crossAxisAlignment: CrossAxisAlignment.stretch,
+    //                   children: [
+    // Text(
+    //   chat.otherUser!.username!,
+    //   style: const TextStyle(
+    //       color: Colors.black,
+    //       fontSize: 16,
+    //       fontWeight: FontWeight.bold),
+    // ),
+    //                     const SizedBox(
+    //                         // height: 2,
+    //                         ),
+    // Text(
+    //   // chat.messages![0].text!,
+    //   chat.messages![chat.messages!.length - 1].text!,
+    //   style: const TextStyle(fontSize: 12),
+    //   maxLines: 2,
+    // ),
+    //                     const SizedBox(
+    //                       height: 15,
+    //                     ),
+    //                     Padding(
+    //                       padding: const EdgeInsets.only(right: 15, left: 30),
+    //                       child: Column(
+    //                         children: <Widget>[
+    //                           Text(
+    //                             messageDate(chat
+    //                                 .messages![chat.messages!.length - 1]
+    //                                 .createdAt!),
+    //                             style: TextStyle(
+    //                               color: Theme.of(context).primaryColor,
+    //                               fontSize: 12,
+    //                             ),
+    //                           ),
+    //                           const SizedBox(
+    //                             height: 5,
+    //                           ),
+    // Container(
+    //   padding: const EdgeInsets.symmetric(
+    //       horizontal: 5, vertical: 0),
+    //   decoration: BoxDecoration(
+    //     borderRadius: BorderRadius.circular(30),
+    //     color: Colors.blue,
+    //   ),
+    //   child: const Text(
+    //     '2',
+    //     style: TextStyle(
+    //       color: Colors.white,
+    //       fontSize: 12,
+    //     ),
+    //   ),
+    // ),
+    //                         ],
+    //                       ),
+    //                     ),
+    //                     Container(
+    //                       width: double.infinity,
+    //                       height: 1,
+    //                       color: const Color(0xffdddddd),
+    //                     )
+    //                   ],
+    //                 )),
+    //               ),
+    //             )
+    //           ],
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );

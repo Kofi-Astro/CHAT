@@ -36,22 +36,15 @@ class ContactController extends StateControl {
   bool get loading => _loading;
 
   @override
-  void init() {
-    // socket.on('new-chat', (dynamic data) {
-    //   print('New chat: $data');
-    // });
-
-    // socket.on('new-message', (dynamic data) {
-    //   print('New message: $data');
-    // });
-    // notifyListeners();
-  }
+  void init() {}
   void initProvider() {
     _chatsProvider = Provider.of<ChatsProvider>(context);
     chat = _chatsProvider.chats
         .firstWhere((chat) => chat.id == _chatsProvider.selectedChatId);
   }
   // }
+
+  void sendAttachment() {}
 
   void sendMessage() {
     String text = textEditingController.text;
@@ -78,12 +71,6 @@ class ContactController extends StateControl {
     // notifyListeners();
     _chatsProvider.addMessageToSelectedChat(message);
   }
-
-  // void disconnectSocket() {
-  //   if (socket.connected) {
-  //     socket.disconnect();
-  //   }
-  // }
 
   @override
   void dispose() {
