@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../utils/socket_controller.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../../data/providers/chats_provider.dart';
 import '../../models/user.dart';
@@ -27,6 +28,8 @@ class HomeController extends StateControl {
   IO.Socket socket = SocketController.socket;
   late ChatsProvider _chatsProvider;
 
+  late FirebaseMessaging _firebaseMessaging;
+
   bool _error = false;
   bool get error => _error;
 
@@ -44,6 +47,33 @@ class HomeController extends StateControl {
   void init() {
     getChats();
     initSocket();
+
+    _firebaseMessaging = FirebaseMessaging.instance;
+    requestPushNotificationPermission();
+    configureFirebaseMessaging();
+  }
+
+  void requestPushNotificationPermission() {
+    _firebaseMessaging.requestPermission();
+  }
+
+  void configureFirebaseMessaging() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification!;
+      //show notification
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('OnMessageOpened app: $message');
+    });
+
+    // FirebaseMessaging.onBackgroundMessage((RemoteMessage message) {
+    //   print('OnBackgroudMessage: $message');
+    //   return message;
+    // });
+    _firebaseMessaging.getToken().then((token) {
+      print('Token: $token');
+    });
   }
 
   void initProvider() {
