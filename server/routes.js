@@ -66,6 +66,7 @@ router.get('/chats', [middlewares.user], ChatController.getChats);
 router.get('/chats/user/:userId', [middlewares.user], ChatController.getChatByUserId);
 router.post('/chats/:chatId/message', [middlewares.user], ChatController.sendMessage);
 router.post('/chats/:chatId/read', [middlewares.user], ChatController.readChat);
+router.post('/fcm-token', [middlewares.user], UserController.saveFcmToken);
 
 
 // File upload endpoint

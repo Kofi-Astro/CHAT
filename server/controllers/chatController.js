@@ -1,6 +1,7 @@
 const ChatRepository = require('../repositories/chatRepository');
 const ObjectId = require('mongoose').Types.ObjectId;
 const shared = require('../shared/index');
+const PushNotificationController = require('./pushNotificationController');
 
 
 
@@ -98,22 +99,36 @@ class ChatController {
             chat.messages.push(message);
             const users = shared.users;
             const findUsers = users.filter(user => (user._id == chat.lowerId._id || user._id == chat.higherId._id) && user._id != myId);
-            // console.log("findUsers: ", findUsers);
+
             findUsers.forEach(user => {
-                // console.log('Issuing user with socket: ', user.socket.id);
-                // console.log('Issuing', {
+
+                // user.socket.emit('message',
+                //     {
                 //     ...chat,
+
                 //     messages: chat.messages,
-                // })
-                user.socket.emit('message', {
-                    ...chat,
-                    // messages,
-                    messages: chat.messages,
-                });
+                // });
                 user.socket.emit('message', chat);
             });
-            // console.log('chat now: ', chat);
+
             chat.save();
+
+            let userFcmToken;
+            let myName;
+            if (isLowerIdUser) {
+                userFcmToken = chat.higherId.fcmToken;
+                myName = chat.lowerId.username;
+            } else {
+                userFcmToken = chat.lowerId.fcmToken;
+                myName = chat.higherId.username;
+
+            }
+
+            if (userFcmToken) {
+                PushNotificationController.sendNotification(myName, text, userFcmToken);
+            }
+
+
             return res.json({
                 chat
             });

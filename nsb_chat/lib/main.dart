@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import './theme.dart';
 import '../screens/contact/contact.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +26,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // FlutterStatusbarcolor.setStatusBarColor(Colors.blueAccent);
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarBrightness: Brightness.light,
+      ),
+    );
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ChatsProvider()),

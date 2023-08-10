@@ -12,6 +12,7 @@ const userSchema = mongoose.Schema({
     password: {
         type: String, required: true, select: false,
     },
+    fcmToken: String,
     createAt: {
         type: Date,
         default: Date.now,

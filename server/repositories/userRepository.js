@@ -21,6 +21,10 @@ class UserRepository {
     async getUsersWhereNot(userId) {
         return await User.find({ _id: { $ne: new ObjectId(userId) } });
     }
+
+    async saveUserFcmToken(userId, fcmToken) {
+        return await User.updateOne({ _id: new ObjectId(userId) }, { fcmToken });
+    }
 }
 
 const userRepository = new UserRepository();

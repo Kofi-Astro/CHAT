@@ -14,6 +14,9 @@ class UserRepository {
 
       final List<dynamic> userResponse = jsonDecode(response.body)['users'];
 
+      // final List<User> users =
+      // userResponse.map((user) => User.fromJson(user)).toList();
+
       final List<User> users =
           userResponse.map((user) => User.fromJson(user)).toList();
 
@@ -23,6 +26,15 @@ class UserRepository {
         'error': true,
         'errorMessage': 'Error',
       });
+    }
+  }
+
+  Future<void> saveUserFcmToken(String fcmToken) async {
+    try {
+      var body = jsonEncode({'fcmToken': fcmToken});
+      await http.post(Uri.parse('${MyUrls.serverUrl}/fcm-token'), body: body);
+    } catch (error) {
+      print('Error: $error');
     }
   }
 }

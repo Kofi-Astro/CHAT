@@ -109,6 +109,25 @@ class UserController {
         }
     }
 
+    async saveFcmToken(req, res) {
+        try {
+
+            const { fcmToken } = req.body;
+            console.log('fcmToken = ', fcmToken);
+
+            const myId = req._id;
+
+            const myUser = await userRepository.saveUserFcmToken(myId, fcmToken);
+            return res.json({ user: myUser });
+
+        } catch (error) {
+            return res.json({
+                error: true,
+                errorMessage: error
+            });
+        }
+    }
+
 }
 
 

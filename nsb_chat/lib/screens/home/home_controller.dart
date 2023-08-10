@@ -14,6 +14,7 @@ import '../login/login.dart';
 import '../../models/chat.dart';
 import '../../models/custom_error.dart';
 import '../../repositories/chat_repository.dart';
+import '../../repositories/user_repository.dart';
 import '../../screens/add_chat/add_chat.dart';
 import '../../utils/state_control.dart';
 
@@ -25,6 +26,7 @@ class HomeController extends StateControl {
   }
 
   final ChatRepository _chatRepository = ChatRepository();
+  final UserRepository _userRepository = UserRepository();
   IO.Socket socket = SocketController.socket;
   late ChatsProvider _chatsProvider;
 
@@ -73,6 +75,9 @@ class HomeController extends StateControl {
     // });
     _firebaseMessaging.getToken().then((token) {
       print('Token: $token');
+      if (token != null) {
+        _userRepository.saveUserFcmToken(token);
+      }
     });
   }
 
