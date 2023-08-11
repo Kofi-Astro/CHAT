@@ -57,7 +57,8 @@ class ChatCard extends StatelessWidget {
           ]),
           trailing: Column(
             children: [
-              Text(messageDate(chat.messages![0].sendAt!)),
+              // Text(messageDate(chat.messages![0].sendAt!)),
+              Text('00:00'),
               const SizedBox(
                 height: 10,
               ),

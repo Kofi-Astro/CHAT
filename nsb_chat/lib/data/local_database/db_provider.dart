@@ -20,15 +20,15 @@ class DBProvider {
 
   static final DBProvider db = DBProvider._();
 
-  static late Database _database;
+  static Database? _database;
 
   Future<Database> get database async {
     if (_database != null) {
-      return _database;
+      return _database!;
     }
 
     _database = await createDatabase();
-    return _database;
+    return _database!;
   }
 
   Future<Database> createDatabase() async {
@@ -134,7 +134,7 @@ class DBProvider {
              tb_message.send_at,
              tb_message.unread_by_me
       FROM tb_message
-      WHERE tb_mesage.chat_id = '$chatId'
+      WHERE tb_message.chat_id = '$chatId'
       ORDER BY tb_message.send_at DESC
 ''');
 

@@ -21,7 +21,7 @@ drop table if exists tb_chat
             _id text not null,
             user_id text not null,
             constraint tb_chat_user_id_fk foreign key(user_id)
-            references tb_user(_id),
+            references tb_user(_id)
           )
           ''');
 

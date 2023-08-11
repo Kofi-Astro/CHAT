@@ -13,9 +13,14 @@ import './screens/add_chat/add_chat.dart';
 import './data/providers/chats_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'data/local_database/db_provider.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  await DBProvider.db.createDatabase();
+
   runApp(const MyApp());
 }
 

@@ -82,6 +82,19 @@ class ContactController extends StateControl {
     await _chatRepository.sendMessage(message, to!);
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    textEditingController.clear();
+    _chatsProvider.setSelectedChat(null);
+    // disconnectSocket();
+  }
+}
+
+
+
+
+
   // void initProvider() {
   //   _chatsProvider = Provider.of<ChatsProvider>(context);
   //   chat = _chatsProvider.chats
@@ -116,13 +129,3 @@ class ContactController extends StateControl {
   //   // notifyListeners();
   //   _chatsProvider.addMessageToSelectedChat(message);
   // }
-
-  @override
-  void dispose() {
-    super.dispose();
-    var textEditingController;
-    textEditingController.dispose();
-    _chatsProvider.setSelectedChat(null);
-    // disconnectSocket();
-  }
-}
