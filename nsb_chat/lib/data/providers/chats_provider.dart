@@ -35,15 +35,33 @@ class ChatsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  setSelectedChat(Chat? selectedChatId) async {
-    _selectedChat = selectedChatId!;
-    notifyListeners();
-    _selectedChat.messages =
-        await DBProvider.db.getChatMessages(selectedChatId.id!);
-    print('messages: ${_selectedChat.messages!.length}');
-    _readSelectedChatMessages();
+  // setSelectedChat(Chat selectedChatId) async {
+  //   _selectedChat = selectedChatId!;
+  //   notifyListeners();
+  //   _selectedChat.messages =
+  //       await DBProvider.db.getChatMessages(selectedChatId.id!);
+  //   print('messages: ${_selectedChat.messages!.length}');
+  //   _readSelectedChatMessages();
 
-    // _chatRepository.readChat(_selectedChatId);
+  //   // _chatRepository.readChat(_selectedChatId);
+  //   notifyListeners();
+  // }
+
+  void setSelectedChat(Chat? selectedChatId) async {
+    if (selectedChatId == null) {
+      return;
+    }
+
+    _selectedChat = selectedChatId;
+    notifyListeners();
+
+    if (_selectedChat.messages == null) {
+      _selectedChat.messages =
+          await DBProvider.db.getChatMessages(selectedChatId.id!);
+      print('messages: ${_selectedChat.messages!.length}');
+      _readSelectedChatMessages();
+    }
+
     notifyListeners();
   }
 

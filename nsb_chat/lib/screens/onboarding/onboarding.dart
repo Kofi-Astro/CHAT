@@ -34,7 +34,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   void initState() {
     super.initState();
-    DBProvider.db.createDatabase();
 
     verifyUserLoggedInAndRedirect();
   }

@@ -17,7 +17,7 @@ class UserTable {
   static Future<void> createTable(Database db) async {
     await db.execute('''
          CREATE TABLE tb_user(
-          id_user interger primary key autoincrement,
+          id_user integer primary key autoincrement,
           _id text not null,
           email text not null,
           username text not null
