@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import './theme.dart';
 import '../screens/contact/contact.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // FlutterStatusbarcolor.setStatusBarColor(Colors.blueAccent);
     SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
+      const SystemUiOverlayStyle(
         statusBarBrightness: Brightness.light,
       ),
     );

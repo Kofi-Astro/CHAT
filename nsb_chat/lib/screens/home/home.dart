@@ -47,7 +47,9 @@ class _HomeScreenState extends State<HomeScreen>
           return Scaffold(
               appBar: AppBar(
                 backgroundColor: Theme.of(context).primaryColor,
-                title: const Text('NSB CHAT'),
+                title: Text(
+                    // 'NSB CHAT'
+                    _homeController.loading ? 'Connecting' : 'NSB CHAT'),
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.search),
@@ -79,8 +81,9 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                           PopupMenuItem(
                             value: 'Logout',
-                            child: Text('Logout'),
                             onTap: _homeController.logout,
+                            child: const Text('Logout'),
+                            // onTap: () {},
                           )
                         ];
                       })
@@ -101,8 +104,8 @@ class _HomeScreenState extends State<HomeScreen>
                 controller: _tabController,
                 children: [
                   usersList(context),
-                  AddChatScreen(),
-                  CallsPage(),
+                  const AddChatScreen(),
+                  const CallsPage(),
                 ],
               ),
               floatingActionButton: FloatingActionButton(
@@ -115,13 +118,13 @@ class _HomeScreenState extends State<HomeScreen>
   Widget usersList(BuildContext context) {
     if (_homeController.loading) {
       return Container(
-        child: Center(child: CupertinoActivityIndicator()),
+        child: const Center(child: CupertinoActivityIndicator()),
       );
     }
 
     if (_homeController.error) {
       return Container(
-        child: Center(child: Text('Error occurred while fetching chats')),
+        child: const Center(child: Text('Error occurred while fetching chats')),
       );
     }
 
@@ -131,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     if (!chatsWithMessages) {
       return Container(
-        child: Center(child: Text('No chats exist')),
+        child: const Center(child: Text('No chats exist')),
       );
     }
 

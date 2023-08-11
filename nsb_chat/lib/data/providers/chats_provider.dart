@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nsb_chat/data/local_database/db_provider.dart';
+import '../../models/user.dart';
 import '../../repositories/chat_repository.dart';
 
 import '../../models/chat.dart';
@@ -10,20 +12,20 @@ class ChatsProvider with ChangeNotifier {
 
   final ChatRepository _chatRepository = ChatRepository();
 
-  late String _selectedChatId;
-  String get selectedChatId => _selectedChatId;
+  late Chat _selectedChat;
+  Chat get selectedChat => _selectedChat;
 
-  setChats(List<Chat> chats) {
-    // _chats = chats;
-
-    List<Chat> newChats = List<Chat>.from(chats);
+  // setChats(List<Chat> chats) {
+  // _chats = chats;
+  updateChats() async {
+    List<Chat> newChats = await DBProvider.db.getChatWithMessages();
     newChats.sort(
       (a, b) {
         if (a.messages!.isEmpty) return 1;
         if (b.messages!.isEmpty) return -1;
 
-        int millisecondsA = a.messages![a.messages!.length - 1].createdAt!;
-        int millisecondsB = b.messages![b.messages!.length - 2].createdAt!;
+        int millisecondsA = a.messages![a.messages!.length - 1].sendAt!;
+        int millisecondsB = b.messages![b.messages!.length - 2].sendAt!;
 
         return millisecondsA > millisecondsB ? -1 : 1;
       },
@@ -33,33 +35,41 @@ class ChatsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  setSelectedChat(String selectedChatId) {
-    _selectedChatId = selectedChatId;
+  setSelectedChat(Chat? selectedChatId) async {
+    _selectedChat = selectedChatId!;
+    notifyListeners();
+    _selectedChat.messages =
+        await DBProvider.db.getChatMessages(selectedChatId.id!);
+    print('messages: ${_selectedChat.messages!.length}');
     _readSelectedChatMessages();
-    _chatRepository.readChat(_selectedChatId);
+
+    // _chatRepository.readChat(_selectedChatId);
     notifyListeners();
   }
 
-  _readSelectedChatMessages() {
+  _readSelectedChatMessages() async {
     // _selectedChat.messages = _selectedChat.messages?.map((message) {
     //   message.unreadByMe = false;
     //   return message;
     // }).toList();
 
-    List<Chat> updatedChats = _chats;
-    updatedChats = updatedChats.map((chat) {
-      if (chat.id == _selectedChatId) {
-        chat.messages = chat.messages?.map((message) {
-          message.unreadByMe = false;
-          return message;
-        }).toList();
-      }
-      return chat;
-    }).toList();
+    // List<Chat> updatedChats = _chats;
+    // updatedChats = updatedChats.map((chat) {
+    //   if (chat.id == _selectedChatId) {
+    //     chat.messages = chat.messages?.map((message) {
+    //       message.unreadByMe = false;
+    //       return message;
+    //     }).toList();
+    //   }
+    //   return chat;
+    // }).toList();
 
-    // updateSelectedChatInChats();
+    // // updateSelectedChatInChats();
 
-    setChats(updatedChats);
+    // setChats(updatedChats);
+
+    await DBProvider.db.readChatMessages(_selectedChat.id!);
+    updateChats();
   }
 
   addMessageToSelectedChat(Message message) {
@@ -77,14 +87,39 @@ class ChatsProvider with ChangeNotifier {
     //   }).toList();
     //   setChats(newChats);
 
-    List<Chat> updatedChats = _chats;
-    updatedChats = updatedChats.map((chat) {
-      if (chat.id == _selectedChatId) {
-        chat.messages?.add(message);
-      }
-      return chat;
-    }).toList();
+    // List<Chat> updatedChats = _chats;
+    // updatedChats = updatedChats.map((chat) {
+    //   if (chat.id == _selectedChatId) {
+    //     chat.messages?.add(message);
+    //   }
+    //   return chat;
+    // }).toList();
 
-    setChats(updatedChats);
+    // setChats(updatedChats);
+
+    DBProvider.db.addMessage(message);
+    updateChats();
+  }
+
+  createUserIfNotExists(User user) async {
+    await DBProvider.db.createUserIfNotExists(user);
+    updateChats();
+  }
+
+  createChatIfNotExists(Chat chat) async {
+    await DBProvider.db.createChatIfNotExists(chat);
+    updateChats();
+  }
+
+  createChatAndUserIfNotExists(Chat chat) async {
+    await DBProvider.db.createUserIfNotExists(chat.user!);
+    await DBProvider.db.createChatIfNotExists(chat);
+    updateChats();
+  }
+
+  addMessageToChat(Message message) async {
+    await DBProvider.db.addMessage(message);
+    updateChats();
+    setSelectedChat(selectedChat);
   }
 }

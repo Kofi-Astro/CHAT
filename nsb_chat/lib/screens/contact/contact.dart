@@ -96,7 +96,7 @@ class _ContactScreenState extends State<ContactScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _contactController.chat.otherUser!.username!,
+                          _contactController.selectedChat.user!.username!,
                           style: const TextStyle(
                             fontSize: 18.5,
                             fontWeight: FontWeight.bold,
@@ -164,25 +164,27 @@ class _ContactScreenState extends State<ContactScreen> {
                 Expanded(
                   child: ListView.builder(
                     // reverse: true,
-                    itemCount: _contactController.chat.messages!.length,
+                    itemCount: _contactController.selectedChat.messages!.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final message = _contactController.chat.messages![index];
+                      final message =
+                          _contactController.selectedChat.messages![index];
 
                       return Padding(
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                           left: 15,
                           right: 15,
                           top: 5,
                         ),
                         child:
-                            message.userId == _contactController.chat.myUser!.id
+                            // message.userId == _contactController.chat.myUser!.id
+                            message.id == _contactController.selectedChat.id
                                 ? SenderMessageCard(
-                                    message: message.text,
-                                    time: message.createdAt.toString(),
+                                    message: message.message,
+                                    time: message.sendAt.toString(),
                                   )
                                 : RecepientMessageCard(
-                                    message: message.text,
-                                    time: message.createdAt.toString(),
+                                    message: message.message,
+                                    time: message.sendAt.toString(),
                                   ),
                       );
                     },
@@ -259,13 +261,14 @@ class _ContactScreenState extends State<ContactScreen> {
                         ),
                         Padding(
                           padding:
-                              EdgeInsets.only(bottom: 8.0, left: 2, right: 2),
+                              const EdgeInsets.only(bottom: 8.0, left: 2, right: 2),
                           child: CircleAvatar(
                             backgroundColor: Theme.of(context).primaryColor,
                             radius: 25,
                             child: sendButton
                                 ? IconButton(
                                     onPressed: _contactController.sendMessage,
+                                    // onPressed: () {},
                                     icon: const Icon(
                                       Icons.send,
                                       color: Colors.white,

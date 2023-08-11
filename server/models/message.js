@@ -1,20 +1,37 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const messageSchema = new mongoose.Schema({
-    content: {
+
+    chatId: {
         type: String, required: true,
     },
-    sender: {
+
+    from: {
+        type: ObjectId,
+        required: true,
+        ref: 'User',
+    },
+
+    to: {
+        type: ObjectId,
+        required: true,
+        ref: 'User',
+    }
+    ,
+    message: {
         type: String, required: true,
     },
-    recipient: {
-        type: String, required: true,
+
+    triedToGet: {
+        type: Boolean,
+        default: false,
+        select: false,
     },
-    timestamp: {
-        type: Date,
-        default: Date.now,
-    }, media: {
-        type: String,
+
+    sendAt: {
+        type: Number,
+        default: Date.now
     }
 });
 

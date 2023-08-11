@@ -1,23 +1,25 @@
-import 'dart:convert';
 
 import './message.dart';
 import './user.dart';
 
-import '../utils/custom_shared_preferences.dart';
 
 class Chat {
   String? id;
-  User? lowerIdUser;
-  User? higherIdUser;
+  // String? userId;
   List<Message>? messages;
-  User? myUser;
-  User? otherUser;
+  User? user;
+  int? unreadMessages;
+  String? lastMessage;
+  int? lastMessageSentAt;
 
   Chat({
     required this.id,
-    required this.lowerIdUser,
-    required this.higherIdUser,
-    required this.messages,
+    // this.userId,
+    required this.user,
+    this.messages = const [],
+    this.unreadMessages,
+    this.lastMessage,
+    this.lastMessageSentAt,
   });
 
   // Chat.fromJson(Map<String, dynamic> json) {
@@ -38,54 +40,45 @@ class Chat {
 
   Chat.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
-    lowerIdUser = User.fromJson(json['lowerId']);
-    higherIdUser = User.fromJson(json['higherId']);
-    List<dynamic> messagesJson =
-        json['messages']; // Store the parsed JSON list in a variable
-    messages =
-        messagesJson.map((message) => Message.fromJson(message)).toList();
+    // userId = json['userId'];
+    user = User.fromJson(json['user']);
+    messages = [];
   }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
     json['_id'] = id;
-    json['lowerId'] = lowerIdUser!.toJson();
-    json['higherId'] = higherIdUser!.toJson();
-    json['messages'] = messages!.map((message) => message.toJson()).toList();
+    // json['userId'] = userId;
     return json;
   }
 
-  @override
-  String toString() {
-    return 'Chat{id: $id, lowerIdUser: $lowerIdUser, higherIdUser: $higherIdUser, messages: $messages}';
-  }
+  // @override
+  // String toString() {
+  //   return 'Chat{id: $id, lowerIdUser: $lowerIdUser, higherIdUser: $higherIdUser, messages: $messages}';
+  // }
 
   Future<Chat> formatChat() async {
-    // print('Before adjusting users: ${toJson()}');
-    adjustChatUsers();
-    // print('After adjusting users: ${toJson()}');
     return this;
   }
 
-  void adjustChatUsers() async {
-    final String userString = await CustomSharedPreferences.get('user');
-    final Map<String, dynamic> userJson = jsonDecode(userString);
-    final myUserFromSharedPreferences = User.fromJson(userJson);
+  Chat.fromLocalDatabaseMap(Map<dynamic, dynamic> map) {
+    id = map['_id'];
+    // userId = map['user_id'];
+    user = User.fromLocalDatabaseMap({
+      '_id': map['user_id'],
+      'email': map['email'],
+      'username': map['username'],
+    });
+    messages = [];
+    unreadMessages = map['unread_messages'];
+    lastMessage = map['last_message'];
+    lastMessageSentAt = map['last_message_send_at'];
+  }
 
-    if (myUserFromSharedPreferences.id == lowerIdUser!.id) {
-      myUser = lowerIdUser;
-      otherUser = higherIdUser;
-      messages = messages?.map((message) {
-        message.unreadByMe = message.unreadByLowerIdUser;
-        return message;
-      }).toList();
-    } else {
-      otherUser = lowerIdUser;
-      myUser = higherIdUser;
-      messages = messages?.map((message) {
-        message.unreadByMe = message.unreadByHigherIdUser;
-        return message;
-      }).toList();
-    }
+  Map<String, dynamic> toLocalDatabaseMap() {
+    Map<String, dynamic> map = {};
+    map['_id'] = id;
+    map['user_id'] = user!.id;
+    return map;
   }
 }

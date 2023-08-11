@@ -29,7 +29,7 @@ class UserRepository {
     }
   }
 
-  Future<void> saveUserFcmToken(String fcmToken) async {
+  Future<void> saveUserFcmToken(String? fcmToken) async {
     try {
       var body = jsonEncode({'fcmToken': fcmToken});
       await http.post(Uri.parse('${MyUrls.serverUrl}/fcm-token'), body: body);

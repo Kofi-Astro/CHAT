@@ -4,6 +4,7 @@ const mongoDB = require('./database/index');
 const socketIO = require('socket.io');
 const shared = require('./shared');
 const { use } = require('./routes');
+const MessageController = require('./controllers/messageController');
 
 const port = process.env.PORT || 5000;
 // const port = 5000;
@@ -22,12 +23,18 @@ shared.users = users;
 
 io.on('connection', socket => {
   socket.on('user-in', (user) => {
-    // users.push({ ...user, socketId: socket.id });
-    // io.emit('users-update', users);
 
-    users.push({ ...user, socket });
+    // users.push({ ...user, socket });
+
+    const newUser = { ...user, socket };
+    users.push(newUser);
+    users.push(newUser);
+    console.log('user = ', user);
+
+    socket.emit('user-in');
     shared.users = users;
-    // console.log('users now ', users);
+
+    MessageController.getMessagesAndEmit(newUser);
   });
 
 

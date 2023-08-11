@@ -54,6 +54,95 @@ class AddChatController extends StateControl {
     notifyListeners();
   }
 
+  void newChat(User user) async {
+    _showProgressDialog();
+
+    // dynamic response = await _chatRepository.getChatByUsersId(user.id!);
+
+    // await _dismissProgressDialog(); // Move this line outside of condition blocks
+
+    // if (response is CustomError) {
+    //   _error = true;
+    // } else if (response is Chat) {
+    //   _chat = await response.formatChat();
+
+    //   ChatsProvider chatsProvider =
+    //       Provider.of<ChatsProvider>(context, listen: false);
+
+    //   bool findChatIndex =
+    //       chatsProvider.chats.indexWhere((chat) => chat.id == _chat.id) > -1;
+    //   if (!findChatIndex) {
+    //     // print('Enter to begin chat');
+    //     List<Chat> newChats = List<Chat>.from(chatsProvider.chats);
+    //     print('This is the newChat: $newChats');
+    //     newChats.add(_chat);
+    //     chatsProvider.setChats(newChats);
+    //   } else {
+    //     print('Can\'t access chat');
+    //   }
+
+    //   chatsProvider.setSelectedChat(_chat.id!);
+    //   Navigator.of(context).pushNamed(ContactScreen.routeName);
+    // }
+    final Chat chat = Chat(
+      id: user.chatId,
+      user: user,
+    );
+
+    // dynamic response = await DBProvider.db.createOrGetChat(chat);
+    // print('Response: $response');
+
+    final provider = Provider.of<ChatsProvider>(context, listen: false);
+    provider.createUserIfNotExists(chat.user!);
+    provider.createChatIfNotExists(chat);
+    provider.setSelectedChat(chat);
+    Navigator.of(context).pushNamed(ContactScreen.routeName);
+
+    _loading = false;
+    notifyListeners();
+  }
+
+  void _showProgressDialog() {
+    _progressDialog = ProgressDialog(context,
+        type: ProgressDialogType.normal, isDismissible: false);
+    _progressDialog.style(
+        message: 'Loading...',
+        borderRadius: 10.0,
+        backgroundColor: Colors.white,
+        progressWidget: const CupertinoActivityIndicator(),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        progress: 0.0,
+        maxProgress: 100.0,
+        progressTextStyle: const TextStyle(
+            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+        messageTextStyle: const TextStyle(
+            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
+    _progressDialog.show();
+  }
+
+  Future<bool> _dismissProgressDialog() {
+    return _progressDialog.hide();
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // @override
   // void dispose() {
   //   super.dispose();
@@ -95,61 +184,3 @@ class AddChatController extends StateControl {
   //   _loading = false;
   //   notifyListeners();
   // }
-  void newChat(User user) async {
-    _showProgressDialog();
-
-    dynamic response = await _chatRepository.getChatByUsersId(user.id!);
-
-    await _dismissProgressDialog(); // Move this line outside of condition blocks
-
-    if (response is CustomError) {
-      _error = true;
-    } else if (response is Chat) {
-      _chat = await response.formatChat();
-
-      ChatsProvider chatsProvider =
-          Provider.of<ChatsProvider>(context, listen: false);
-
-      bool findChatIndex =
-          chatsProvider.chats.indexWhere((chat) => chat.id == _chat.id) > -1;
-      if (!findChatIndex) {
-        // print('Enter to begin chat');
-        List<Chat> newChats = List<Chat>.from(chatsProvider.chats);
-        print('This is the newChat: $newChats');
-        newChats.add(_chat);
-        chatsProvider.setChats(newChats);
-      } else {
-        print('Can\'t access chat');
-      }
-
-      chatsProvider.setSelectedChat(_chat.id!);
-      Navigator.of(context).pushNamed(ContactScreen.routeName);
-    }
-
-    _loading = false;
-    notifyListeners();
-  }
-
-  void _showProgressDialog() {
-    _progressDialog = ProgressDialog(context,
-        type: ProgressDialogType.normal, isDismissible: false);
-    _progressDialog.style(
-        message: 'Loading...',
-        borderRadius: 10.0,
-        backgroundColor: Colors.white,
-        progressWidget: const CupertinoActivityIndicator(),
-        elevation: 10.0,
-        insetAnimCurve: Curves.easeInOut,
-        progress: 0.0,
-        maxProgress: 100.0,
-        progressTextStyle: const TextStyle(
-            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-        messageTextStyle: const TextStyle(
-            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
-    _progressDialog.show();
-  }
-
-  Future<bool> _dismissProgressDialog() {
-    return _progressDialog.hide();
-  }
-}

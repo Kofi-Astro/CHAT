@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../models/message.dart';
 
 class SenderMessageCard extends StatelessWidget {
   // Message? message;

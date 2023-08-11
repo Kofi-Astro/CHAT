@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as https;
+import 'package:nsb_chat/models/message.dart';
 
 import '../models/chat.dart';
 import '../models/custom_error.dart';
@@ -10,33 +11,51 @@ import '../utils/my_urls.dart';
 class ChatRepository {
   CustomHttpClient http = CustomHttpClient();
 
-  Future<dynamic> getChats() async {
+  Future<dynamic> getMessages() async {
     try {
-      var response = await http.get(Uri.parse('${MyUrls.serverUrl}/chats'));
+      var response = await http.get(Uri.parse('${MyUrls.serverUrl}/message'));
 
-      final List<dynamic> chatResponse = jsonDecode(response.body)['chats'];
+      final List<dynamic> chatResponse = jsonDecode(response.body)['messages'];
 
-      final List<Chat> chats =
-          chatResponse.map((chat) => Chat.fromJson(chat)).toList();
+      // final List<Chat> chats =
+      // chatResponse.map((chat) => Chat.fromJson(chat)).toList();
       // print('This is chat response: ${chats.first.toJson()}');
+
+      final List<Chat> chats = chatResponse.map((json) {
+        print('Response in json: $json');
+        Map<String, dynamic> userJson = json['from'];
+        final chat = Chat.fromJson({
+          '_id': json['chatId'],
+          'user': userJson,
+        });
+        Message message = Message.fromJson(json);
+        print('This is the message id ${message.id}');
+
+        chat.messages!.add(message);
+        print('This is chatid ${chat.id}');
+        return chat;
+      }).toList();
+      for (var chat in chats) {}
 
       return chats;
     } catch (error) {
+      print(error);
       return CustomError.fromJson({'error': true, 'errorMessage': 'Error'});
     }
   }
 
-  Future<dynamic> sendMessage(String chatId, String text) async {
+  Future<dynamic> sendMessage(String message, String to) async {
     try {
-      var body = jsonEncode({'text': text});
+      var body = jsonEncode({'message': message, 'to': to});
       var response = await http.post(
-        Uri.parse('${MyUrls.serverUrl}/chats/$chatId/message'),
+        Uri.parse('${MyUrls.serverUrl}/message'),
         body: body,
       );
 
-      final dynamic chatResponse = jsonDecode(response.body)['chat'];
-      final Chat chat = Chat.fromJson(chatResponse);
-      return chat;
+      final dynamic messageResponse = jsonDecode(response.body)['message'];
+      Message message0 = Message.fromJson(messageResponse);
+
+      return message0;
     } catch (error) {
       return CustomError.fromJson({'error': true, 'errorMessage': 'Error'});
     }
@@ -94,6 +113,14 @@ class ChatRepository {
     } catch (error) {
       print(error);
       return CustomError.fromJson({'error': true, 'errorMessage': 'Error'});
+    }
+  }
+
+  Future<void> deleteMessage(String messageId) async {
+    try {
+      await http.delete(Uri.parse('${MyUrls.serverUrl}/message/$messageId'));
+    } catch (error) {
+      print('Error : $error');
     }
   }
 }

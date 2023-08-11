@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nsb_chat/widgets/recepient_file_card.dart';
-import 'package:nsb_chat/widgets/sender_file_card.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -28,7 +26,7 @@ class ChatCard extends StatelessWidget {
       onTap: () {
         ChatsProvider chatsProvider =
             Provider.of<ChatsProvider>(context, listen: false);
-        chatsProvider.setSelectedChat(chat.id!);
+        chatsProvider.setSelectedChat(chat);
         Navigator.of(context).pushNamed(ContactScreen.routeName);
       },
       child: Column(children: [
@@ -40,26 +38,27 @@ class ChatCard extends StatelessWidget {
             radius: 20,
           ),
           title: Text(
-            chat.otherUser!.username!,
+            // chat.otherUser!.username!,
+            chat.user!.username!,
             style: const TextStyle(
                 color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
           ),
           subtitle: Row(children: [
-            Icon(Icons.done_all),
-            SizedBox(
+            const Icon(Icons.done_all),
+            const SizedBox(
               width: 3,
             ),
             Text(
-              // chat.messages![0].text!,
-              chat.messages![chat.messages!.length - 1].text!,
+              chat.messages![0].message!,
+              // chat.messages![chat.messages!.length - 1].text!,
               style: const TextStyle(fontSize: 13),
               maxLines: 2,
             ),
           ]),
           trailing: Column(
             children: [
-              Text('00:00'),
-              SizedBox(
+              Text(messageDate(chat.messages![0].sendAt!)),
+              const SizedBox(
                 height: 10,
               ),
               Container(
@@ -68,9 +67,11 @@ class ChatCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30),
                   color: Colors.blue,
                 ),
-                child: const Text(
-                  '2',
-                  style: TextStyle(
+                child: Text(
+                  _numberOfUnreadMessagesByMe()! > 0
+                      ? _numberOfUnreadMessagesByMe().toString()
+                      : '',
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 12,
                   ),

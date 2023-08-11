@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:nsb_chat/data/local_database/db_provider.dart';
+import 'package:nsb_chat/data/providers/chats_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../home/home.dart';
 import '../login/login.dart';
@@ -31,8 +34,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   void initState() {
     super.initState();
+    DBProvider.db.database;
 
     verifyUserLoggedInAndRedirect();
+  }
+
+  @override
+  void didChangeDependencies() {
+    Provider.of<ChatsProvider>(context).updateChats();
+    super.didChangeDependencies();
   }
 
   @override

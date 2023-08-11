@@ -2,6 +2,7 @@ const userRepository = require('../repositories/userRepository');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const jwtConfig = require('../config/jwt');
+const hash = require('../utils/hash');
 
 function generateJwtToken(user) {
     const { _id } = user;
@@ -95,9 +96,18 @@ class UserController {
         try {
 
             const myId = req._id;
-            const users = await userRepository.getUsersWhereNot(myId);
+            // const users = await userRepository.getUsersWhereNot(myId);
+            let users = await userRepository.getUsersWhereNot(myId);
+            users = users.map((user) => {
+                const lowerUserId = myId < user._id ? myId : user._id;
+                const higherUserId = myId > user._id ? myId : user._id;
+
+                user.chatId = hash(lowerUserId, higherUserId);
+                return user;
+            })
             return res.json({
-                users
+                // users
+                users: users
             });
 
         } catch (error) {

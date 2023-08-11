@@ -13,8 +13,9 @@ const userSchema = mongoose.Schema({
         type: String, required: true, select: false,
     },
     fcmToken: String,
+    chatId: String,
     createAt: {
-        type: Date,
+        type: Number,
         default: Date.now,
     },
 

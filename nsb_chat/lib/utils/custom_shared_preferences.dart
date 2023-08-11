@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/user.dart';
 
 class CustomSharedPreferences {
   static Future<dynamic> get(String key) async {
@@ -36,9 +40,9 @@ class CustomSharedPreferences {
     prefs.setBool(key, value);
   }
 
-  // static Future<User> getMyUser() async {
-  //   final userString = await CustomSharedPreferences.get("user");
-  //   final userJson = jsonDecode(userString);
-  //   return User.fromJson(userJson);
-  // }
+  static Future<User> getMyUser() async {
+    final userString = await CustomSharedPreferences.get("user");
+    final userJson = jsonDecode(userString);
+    return User.fromJson(userJson);
+  }
 }

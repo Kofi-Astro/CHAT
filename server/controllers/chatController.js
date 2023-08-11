@@ -15,39 +15,41 @@ function formatChatMessageTime(chat) {
 }
 
 class ChatController {
-    async getChatByUserId(req, res) {
-        try {
-            const userId = req.params.userId;
-            const myId = req._id;
 
-            const lowerId = userId < myId ? userId : myId;
-            const higherId = userId > myId ? userId : myId;
 
-            let chat = await ChatRepository.getChatByUsersId({
-                lowerId,
-                higherId
-            });
+    // async getChatByUserId(req, res) {
+    //     try {
+    //         const userId = req.params.userId;
+    //         const myId = req._id;
 
-            if (!chat) {
-                chat = await ChatRepository.create({
-                    lowerId,
-                    higherId
-                });
-                chat = await ChatRepository.getChatById(chat._id);
-            }
-            const formattedChat = formatChatMessageTime(chat);
-            return res.json({
-                chat: formattedChat
-            });
+    //         const lowerId = userId < myId ? userId : myId;
+    //         const higherId = userId > myId ? userId : myId;
 
-        } catch (error) {
-            console.error(error);
-            return res.json({
-                error: true,
-                errorMessage: "Error occured: ", error
-            });
-        }
-    }
+    //         let chat = await ChatRepository.getChatByUsersId({
+    //             lowerId,
+    //             higherId
+    //         });
+
+    //         if (!chat) {
+    //             chat = await ChatRepository.create({
+    //                 lowerId,
+    //                 higherId
+    //             });
+    //             chat = await ChatRepository.getChatById(chat._id);
+    //         }
+    //         const formattedChat = formatChatMessageTime(chat);
+    //         return res.json({
+    //             chat: formattedChat
+    //         });
+
+    //     } catch (error) {
+    //         console.error(error);
+    //         return res.json({
+    //             error: true,
+    //             errorMessage: "Error occured: ", error
+    //         });
+    //     }
+    // }
 
     async getChats(req, res) {
         // console.log('Entry into getChats')00
