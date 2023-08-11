@@ -16,7 +16,7 @@ drop table if exists tb_chat
   static Future<void> createTable(Database db) async {
     await db.execute('''
 
-          create table tb_chat(
+          CREATE TABLE tb_chat(
             id_chat integer primary key autoincrement,
             _id text not null,
             user_id text not null,

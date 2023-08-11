@@ -3,6 +3,7 @@ import 'package:nsb_chat/data/local_database/message_table.dart';
 import 'package:nsb_chat/data/local_database/user_table.dart';
 import 'package:nsb_chat/models/message.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
 import '../../models/chat.dart';
 import '../../models/user.dart';
@@ -22,23 +23,29 @@ class DBProvider {
   static late Database _database;
 
   Future<Database> get database async {
-    // if (_database != null) {
-    //   return _database;
-    // }
+    if (_database != null) {
+      return _database;
+    }
 
-    _database = await _open();
+    _database = await createDatabase();
     return _database;
   }
 
-  Future _open() async {
-    print('creating db');
+  Future<Database> createDatabase() async {
+    String databasePath = await getDatabasesPath();
+    String dbPath = join(databasePath, 'nsb_chat.db');
 
-    return await openDatabase('nsb_chat.db', version: 1,
-        onCreate: (Database db, int version) async {
-      await UserTable.createTable(db);
-      await ChatTable.createTable(db);
-      await MessageTable.createTable(db);
-    }, onOpen: (Database db) async {});
+    var database = await openDatabase(dbPath, version: 1, onCreate: openDb);
+
+    return database;
+  }
+
+  Future openDb(Database db, int version) async {
+    // print('creating db');
+
+    await ChatTable.createTable(db);
+    await UserTable.createTable(db);
+    await MessageTable.createTable(db);
   }
 
   Future<Chat?> getChat(String id) async {

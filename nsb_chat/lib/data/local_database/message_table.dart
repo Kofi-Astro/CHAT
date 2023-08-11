@@ -12,7 +12,7 @@ class MessageTable {
   static Future<void> createTable(Database db) async {
     print("creating it again");
     await db.execute('''
-create table tb_message(
+CREATE TABLE tb_message(
   id_message integer primary key autoincrement,
   _id text, 
   chat_id text not null,

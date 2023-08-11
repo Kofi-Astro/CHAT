@@ -19,20 +19,20 @@
 
 //   Future open(String path) async {
 //     print("creating db");
-//     db = await openDatabase(
-//       path,
-//       version: 1,
-//       onCreate: (Database db, int version) async {
-//         await UserTable.createTable(db);
-//         await ChatTable.createTable(db);
-//         await MessageTable.createTable(db);
-//       },
-//       onOpen: (Database db) async {
-//         await UserTable.recreateTable(db);
-//         await ChatTable.recreateTable(db);
-//         await MessageTable.recreateTable(db);
-//       },
-//     );
+    // db = await openDatabase(
+    //   path,
+    //   version: 1,
+    //   onCreate: (Database db, int version) async {
+    //     await UserTable.createTable(db);
+    //     await ChatTable.createTable(db);
+    //     await MessageTable.createTable(db);
+    //   },
+    //   onOpen: (Database db) async {
+    //     await UserTable.recreateTable(db);
+    //     await ChatTable.recreateTable(db);
+    //     await MessageTable.recreateTable(db);
+    //   },
+    // );
 //   }
 
 //   Future<User> createUser(User user) async {
