@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 // const mongoUrl = 'mongodb://192.168.1.107:27017/chat';
 
-const mongoUrl = 'mongodb://localhost:27017/kayChat';
+const mongoUrl = 'mongodb://localhost:27017/chat';
 
 module.exports = {
 

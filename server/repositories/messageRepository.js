@@ -13,7 +13,7 @@ class MessageRepository {
     }
 
     async get(userId) {
-        return await Message.find({ to: ObjectId(userId) }).populate('from').populate('to');
+        return await Message.find({ to: new ObjectId(userId) }).populate('from').populate('to');
     }
 
     async setTriedToGet(_id) {

@@ -64,10 +64,11 @@ class MessageController {
                 user.socket.emit('message', { message });
             })
         } catch (error) {
-            return res.json({
-                error: true,
-                errorMessage: error
-            });
+            // return res.json({
+            //     error: true,
+            //     errorMessage: error
+            // });
+            console.error(error);
         }
     }
 
